@@ -30,7 +30,7 @@ int main (int argc, char **argv) {
 	
 	int ret = queryRequests(files[3], users, drivers, rides);
     if (ret) {
-    	perror("error reading query requests");
+    	fprintf(stderr, "Error reading query requests");
         return 2;
     }
 
