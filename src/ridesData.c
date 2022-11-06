@@ -2,14 +2,9 @@
 
 #define SIZE 1000
 
-void freefunc(void *data) {
-	GArray *array = (GArray *)data;
-	g_array_free(array, TRUE);
-}
-
 DATA getRidesData(FILE *ptr) {
 	RidesStruct **ridesData = malloc(RIDES_ARR_SIZE*sizeof(RidesStruct *));
-	GHashTable *cityTable = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freefunc); // keys levam malloc do array normal, nao vou dar free aqui
+	GHashTable *cityTable = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freeArray); // keys levam malloc do array normal, nao vou dar free aqui
 	int i;
 	while (fgetc(ptr) != '\n'); // avançar a primeira linha (tbm podia ser um seek hardcoded)
 	for (i = 0; i < RIDES_ARR_SIZE; i++) ridesData[i] = getRides(ptr, cityTable);
@@ -116,4 +111,9 @@ RidesStruct * getRideByID(DATA data, int ID) {
 	* secondaryArray = primaryArray[i],
 	* result = &(secondaryArray[ID - SIZE*i]);
 	return result;
+}
+
+void freeArray(void *data) {
+	GArray *array = (GArray *)data;
+	g_array_free(array, TRUE);
 }

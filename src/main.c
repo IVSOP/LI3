@@ -28,11 +28,11 @@ int main (int argc, char **argv) {
 	DATA rides = getRidesData(files[2]);
 	// DATA rides = NULL;
 	
-	// int ret = queryRequests(files[3], users, drivers, rides);
-    // if (ret) {
-    // 	perror("error reading query requests");
-    //     return 2;
-    // }
+	int ret = queryRequests(files[3], users, drivers, rides);
+    if (ret) {
+    	perror("error reading query requests");
+        return 2;
+    }
 
 	end = clock();
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;

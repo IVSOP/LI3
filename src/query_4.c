@@ -8,8 +8,7 @@ char * query_4(char * city, char * trash1, char * trash2, Userstruct *userData[]
 	unsigned int distance[3] = {0, 0, 0}, //basic, green, premium
 	numRides[3] = {0, 0, 0};
 	guint len;
-	GHashTable * cityTable = ridesData->cityTable;
-	GArray *array = g_hash_table_lookup(cityTable, "Braga");
+	GArray *array = getRidesByCity(ridesData, "Braga");
 	RidesStruct *currentRide;
 	DriverStruct *currentDriver;
 	len = array->len;
