@@ -30,7 +30,7 @@ int writeResults (int commandN, char * strResult) {
     return 0;
 }
 
-int queryRequests (FILE * fp, Userstruct *userData[], DriverStruct *driverData[], RidesData *ridesData) {
+int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
     char * strBuffer = malloc(sizeof(char)*LINE_SIZE); // buffer de cada linha lida
     char * querryResult = NULL; // pointer para a string resultante de cada querry
     char * queryNumber = NULL, * str1 = NULL, * str2 = NULL, * str3 = NULL; // input 1,2,3,4 da query (possivelmente não utilizados

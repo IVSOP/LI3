@@ -5,7 +5,7 @@
 #include "driverdata.h"
 #include "ridesData.h"
 
-int queryRequests (FILE * fp, Userstruct *userData[], DriverStruct *driverData[], RidesData *ridesData);
+int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], RidesData *ridesData);
 int writeResults (int commandN, char * strResult);
 
 #endif

@@ -15,7 +15,7 @@ int compDates (char * date1, char * date2) {
 
 
 //TODO: query_requests para escrever no ficheiro tem de receber mais de uma string usar void * em vez de char * !!!
-char * query_2 (char * number, char * trash1, char * trash2, Userstruct *userData[], DriverStruct *driverData[], RidesData *ridesData) {
+char * query_2 (char * number, char * trash1, char * trash2, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
     //int number = atoi(number);
     char a[11] = "29/11/2021";
     char b[11] = "15/12/2070";

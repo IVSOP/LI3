@@ -29,6 +29,6 @@ RidesStruct * getRideByID(DATA data, int ID);
 RidesStruct * getRideByUser(DATA data, char *name); // not implemented
 RidesStruct * getRideByDriver(DATA data, int driver); // not implemented
 void freeArray(void *data);
-#define getRidesByCity(data, city) (g_hash_table_lookup(data->cityTable, city))
+#define getRidesByCity(data, city) g_hash_table_lookup(data->cityTable, city)
 
 #endif

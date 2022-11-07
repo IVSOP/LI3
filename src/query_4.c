@@ -2,16 +2,14 @@
 
 #define STR_BUFF_SIZE 16
 
-char * query_4(char * city, char * trash1, char * trash2, Userstruct *userData[], DriverStruct *driverData[], RidesData *ridesData) {
-	// debug para ver se ficou com todas as cidades
+char * query_4(char *city, char *trash1, char *trash2, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
 	guint i;
 	unsigned int distance[3] = {0, 0, 0}, //basic, green, premium
 	numRides[3] = {0, 0, 0};
-	guint len;
 	GArray *array = getRidesByCity(ridesData, "Braga");
 	RidesStruct *currentRide;
 	DriverStruct *currentDriver;
-	len = array->len;
+	guint len = array->len;
 
 	for (i = 0; i < len; i++) {
 		currentRide = g_array_index(array, RidesStruct *, i);

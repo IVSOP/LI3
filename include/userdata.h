@@ -15,6 +15,10 @@ typedef struct {
 	unsigned char status;
 } Userstruct;
 
+typedef struct {
+	GHashTable *table;
+} UserData;
+
 DATA getUserData(FILE *ptr);
 void freeTableData(void *userData);
 void freeUserData(DATA userdata);
