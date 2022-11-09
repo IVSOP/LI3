@@ -42,3 +42,5 @@ __MACOSX
 .vscode
 *.zip
 debug
+build
+programa-testes
