@@ -33,5 +33,5 @@ char *loadString(FILE *ptr);
 unsigned char getPayMethod(FILE *ptr);
 unsigned char getAccountStatus(FILE *ptr);
 void writeString(FILE *ptr, char *buffer);
-
+int compDates (char * dateA, char * dateB);
 #endif

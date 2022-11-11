@@ -60,3 +60,26 @@ unsigned char getAccountStatus(FILE *ptr) {
 	}
 	return result;
 }
+
+//compara se date1 é menor que date2
+/*
+int compDates (char * date1, char * date2) {
+    int day1,month1,year1,day2,month2,year2;
+    sscanf(date1, "%d/%d/%d", &day1,&month1,&year1);
+    sscanf(date2, "%d/%d/%d", &day2,&month2,&year2);
+    int result = ((year1 - year2) * 64) + ((month1-month2) * 16) + ((day1-day2)); // peso do ano arbitrariamente maior e do mês segundo maior
+    return result;
+}
+*/
+
+int compDates (char * dateA, char * dateB) {
+	//DD/MM/YYYY
+	int res;
+	if ((res = strncmp(dateA + 6, dateB + 6, 4)) != 0) {
+		return res;
+	} else if ((res = strncmp(dateA + 3,dateB + 3, 2)) != 0) {
+		return res;
+	} else {
+		return (strncmp(dateA,dateB, 2));
+	}
+}

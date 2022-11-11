@@ -67,6 +67,7 @@ void freeDriverData(DATA data) {
 	free(driverData);
 }
 
+//devolve a struct(dados) associada ao driver número i
 DriverStruct * getDriverByID(DATA data, int ID) {
 	ID -= 1;
 	int i = ID / SIZE;

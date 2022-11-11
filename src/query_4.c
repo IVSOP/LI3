@@ -10,7 +10,6 @@ char * query_4(char *city, char *trash1, char *trash2, UserData *userData, Drive
 	RidesStruct *currentRide;
 	DriverStruct *currentDriver;
 	guint len = array->len;
-
 	for (i = 0; i < len; i++) {
 		currentRide = g_array_index(array, RidesStruct *, i);
 		currentDriver = getDriverByID(driverData, currentRide->driver);

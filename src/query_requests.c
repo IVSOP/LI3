@@ -60,7 +60,7 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
             return 3;
         }
 		free (querryResult); // free do buffer de output
-		len = LINE_SIZE;
+		len = LINE_SIZE; // após um getline, len é alterado para o tamanho da linha; tem de ser reset, a próxima linha pode ter len maior
 
 		end = clock();
 		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;

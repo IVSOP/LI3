@@ -106,6 +106,7 @@ void freeRidesData(DATA data) {
 	free(dataStruct);
 }
 
+//devolve a struct(dados) associada à ride número i
 RidesStruct * getRideByID(DATA data, int ID) {
 	ID -= 1; // para o primeiro passar a ser 0
 	int i = ID / RIDES_ARR_SIZE;

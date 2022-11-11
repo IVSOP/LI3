@@ -4,6 +4,7 @@
 #include "commonParsing.h"
 
 #define RIDES_ARR_SIZE 1000
+#define SIZE 1000
 
 typedef struct {
 	char *date;
