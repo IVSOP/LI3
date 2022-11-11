@@ -26,7 +26,6 @@ int main (int argc, char **argv) {
 	DATA drivers = getDriverData(files[1]);
 
 	DATA rides = getRidesData(files[2]);
-	// DATA rides = NULL;
 	
 	int ret = queryRequests(files[3], users, drivers, rides);
     if (ret) {
