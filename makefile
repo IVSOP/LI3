@@ -17,31 +17,39 @@ TEST_DEBUG_BUILD_DIR := $(BASE_BUILD_DIR)/testes_debug
 CC := gcc
 
 GLIBFLAGS := $(shell pkg-config --cflags --libs gobject-2.0)
-STD_FLAGS := -I$(INC_DIR) $(GLIBFLAGS) -Wall -Wextra -pedantic -Wno-unused-parameter
+STD_FLAGS := -I$(INC_DIR) $(GLIBFLAGS) -Wall -Wextra -pedantic -Wno-unused-parameter #-lm -pthread
 CFLAGS := -O2 $(STD_FLAGS)
 DEBUG_FLAGS := -O0 -ggdb3 $(STD_FLAGS)
 
 # get .c files, remove original path and turn into .o
 SRCS_ALL := $(shell ls $(SRC_DIR) | grep '.c')
-SRCS_ALL := $(subst .c,.o,$(SRCS_ALL))
+
+# needs updated bash??
+# gets files common between tests and src to avoid conflicts
+REPETITIONS = $(shell ./Scripts/get_file_repetitions.sh $(SRC_DIR) $(TEST_SRC_DIR))
+OBJ_WITHOUT_REPETITIONS := $(subst .c,.o,$(filter-out $(REPETITIONS), $(SRCS_ALL)))
 
 SRCS_DEBUG := $(SRCS_ALL)
 
 # é as src de teste + as src normains sem o main
-SRCS_TEST := $(shell ls $(TEST_SRC_DIR) | grep '.c') $(filter-out main%,$(ALL_SRCS))
-SRCS_TEST := $(subst .c,.o,$(SRCS_TEST))
+SRCS_TEST := $(shell ls $(TEST_SRC_DIR) | grep '.c')
 
 SRCS_TEST_DEBUG := $(SRCS_TEST)
 
-OBJS_ALL := $(SRCS_ALL:%=$(BUILD_DIR)/%)
+OBJS_ALL := $(subst .c,.o,$(SRCS_ALL))
+OBJS_ALL := $(OBJS_ALL:%=$(BUILD_DIR)/%)
 
-OBJS_DEBUG := $(SRCS_DEBUG:%=$(DEBUG_BUILD_DIR)/%)
+OBJS_DEBUG := $(subst .c,.o,$(SRCS_DEBUG))
+OBJS_DEBUG := $(OBJS_DEBUG:%=$(DEBUG_BUILD_DIR)/%)
 
-OBJS_TEST := $(SRCS_TEST:%=$(TEST_BUILD_DIR)/%) #$(TEST_BUILD_DIR)/main.o $(TEST_BUILD_DIR)/test_header.o
+OBJS_TEST := $(subst .c,.o,$(SRCS_TEST))
+OBJS_TEST := $(OBJS_TEST:%=$(TEST_BUILD_DIR)/%) $(OBJ_WITHOUT_REPETITIONS:%=$(BUILD_DIR)/%) # $(filter-out $(REPETITIONS), $(OBJS_ALL)) #$(TEST_BUILD_DIR)/main.o $(TEST_BUILD_DIR)/test_header.o
 
-OBJS_DEBUG_TEST := $(SRCS_TEST_DEBUG:%=$(TEST_DEBUG_BUILD_DIR)/%)
+OBJS_DEBUG_TEST := $(subst .c,.o,$(SRCS_TEST_DEBUG))
+OBJS_DEBUG_TEST := $(OBJS_DEBUG_TEST:%=$(TEST_DEBUG_BUILD_DIR)/%) $(OBJ_WITHOUT_REPETITIONS:%=$(DEBUG_BUILD_DIR)/%)
 
-# $(info $$TEST_OBJS is [${TEST_OBJS}])
+# $(info $$OBJS_TEST is [${OBJS_TEST}])
+# $(info $$OBJ_WITHOUT_REPETITIONS is [${OBJ_WITHOUT_REPETITIONS}])
 
 # make .d
 DEPS := $(OBJS_ALL:.o=.d) $(OBJS_DEBUG:.o=.d) $(OBJS_TEST:.o=.d)

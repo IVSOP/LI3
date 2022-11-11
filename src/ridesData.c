@@ -2,6 +2,13 @@
 
 #define SIZE 1000
 
+void *sortCity(void *data) {
+	GArray *array = *(GArray **)data;
+	g_array_sort(array, compareRidesByDate);
+	g_thread_exit(NULL);
+	return NULL;
+}
+
 DATA getRidesData(FILE *ptr) {
 	RidesStruct **ridesData = malloc(RIDES_ARR_SIZE*sizeof(RidesStruct *));
 	GHashTable *cityTable = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, freeArray); // keys levam malloc do array normal, nao vou dar free aqui
@@ -17,9 +24,14 @@ DATA getRidesData(FILE *ptr) {
 	// MUDAR ISTO PARA ITERATOR SOBRE A HASHTABLE !!!!!!!!!!!!!!!!!!!!!!!!!!
 	guint len;
 	const gchar ** cities = (const gchar **)g_hash_table_get_keys_as_array(cityTable, &len);
+	GThread *threads[len];
+	gpointer args[len];
 	for (i = 0; i < (const int)len; i++) {
-		g_array_sort((GArray *)g_hash_table_lookup(cityTable, cities[i]), compareRidesByDate);
+		args[i] = g_hash_table_lookup(cityTable, cities[i]);
+		threads[i] = g_thread_new(NULL, sortCity, &args[i]);
 	}
+	for (i = 0; i < (const int)len; i++) g_thread_join(threads[i]); 
+
 	// GArray *braga = g_hash_table_lookup(cityTable, "Braga");
 	// RidesStruct *idk;
 	// for (i = 0; i < 15; i++) {
