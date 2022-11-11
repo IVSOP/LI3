@@ -1,7 +1,7 @@
 TARGET_EXEC := programa-principal
-DEBUG_EXEC := debug
+DEBUG_EXEC := programa-debug
 TEST_EXEC := programa-testes
-TEST_DEBUG_EXEC := debug-testes
+TEST_DEBUG_EXEC := programa-debug-testes
 
 BASE_BUILD_DIR := build
 BUILD_DIR := $(BASE_BUILD_DIR)/obj
@@ -85,7 +85,7 @@ $(TEST_BUILD_DIR)/%.o: $(TEST_SRC_DIR)/%.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_INC_DIR) -c $< -o $@
 
 .PHONY: testes_debug
-testes_debug: $(TEST_DEBUG_EXEC) all
+testes_debug: $(TEST_DEBUG_EXEC) debug
 
 $(TEST_DEBUG_EXEC): $(OBJS_DEBUG_TEST)
 	$(CXX) $(OBJS_DEBUG_TEST) $(GLIBFLAGS) -o $@ $(LDFLAGS)

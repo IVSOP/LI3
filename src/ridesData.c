@@ -12,19 +12,21 @@ DATA getRidesData(FILE *ptr) {
 	RidesData *data = malloc(sizeof(RidesData));
 	data->ridesArray = ridesData;
 	data->cityTable = cityTable;
+	
 
-	// debug preguiçoso, confusao com os tipos
-	// GArray *array = g_hash_table_lookup(cityTable, "Braga");
-	// RidesStruct *ride = g_array_index(array, RidesStruct *, 0);
-	// printf("%d %s %s %s\n", array->len, ride->date, ride->city, ride->user);
-
-	// debug para ver se ficou com todas as cidades
-	// guint len;
-	// const gchar **arr = (const gchar **)g_hash_table_get_keys_as_array(cityTable, &len);
-	// for (i = 0; i < len; i++) {
-	// 	printf("%s\n", arr[i]);
+	// MUDAR ISTO PARA ITERATOR SOBRE A HASHTABLE !!!!!!!!!!!!!!!!!!!!!!!!!!
+	guint len;
+	const gchar ** cities = (const gchar **)g_hash_table_get_keys_as_array(cityTable, &len);
+	for (i = 0; i < (const int)len; i++) {
+		g_array_sort((GArray *)g_hash_table_lookup(cityTable, cities[i]), compareRidesByDate);
+	}
+	// GArray *braga = g_hash_table_lookup(cityTable, "Braga");
+	// RidesStruct *idk;
+	// for (i = 0; i < 15; i++) {
+	// 	idk = g_array_index(braga, RidesStruct *, i);
+	// 	printf("%s\n", idk->date);
 	// }
-	// free(arr); // isto e preciso?
+	free(cities);
 
 	return data;
 }
@@ -116,4 +118,17 @@ RidesStruct * getRideByID(DATA data, int ID) {
 void freeArray(void *data) {
 	GArray *array = (GArray *)data;
 	g_array_free(array, TRUE);
+}
+
+gint compareRidesByDate (gconstpointer a, gconstpointer b) {
+	gint res;
+	char *dateA = (*(RidesStruct **)a)->date, *dateB = (*(RidesStruct **)b)->date;
+	//DD/MM/YYYY
+	if ((res = strncmp(dateA + 6, dateB + 6, 4)) != 0) {
+		return res;
+	} else if ((res = strncmp(dateA + 3,dateB + 3, 2)) != 0) {
+		return res;
+	} else {
+		return (strncmp(dateA,dateB, 2));
+	}
 }
