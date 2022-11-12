@@ -6,7 +6,7 @@ char * query_4(char *city, char *trash1, char *trash2, UserData *userData, Drive
 	guint i;
 	unsigned int distance[3] = {0, 0, 0}, //basic, green, premium
 	numRides[3] = {0, 0, 0};
-	GArray *array = getRidesByCity(ridesData, "Braga");
+	GArray *array = getRidesByCity(ridesData, city);
 	RidesStruct *currentRide;
 	DriverStruct *currentDriver;
 	guint len = array->len;

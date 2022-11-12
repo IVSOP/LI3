@@ -11,10 +11,9 @@
 
 int writeResults (int commandN, char * strResult) {
     int ret;
-    char outputFileName[20] = "commandX_output.txt"; // path do ficheiro com o resultado do comando
-    outputFileName[7] = (commandN+48);
-    char resultPath[31] = "Resultados/"; //31 é a soma dos caracteres de resultados com o nome do ficheiro a criar
-    strcat(resultPath,outputFileName);
+    char resultPath[64];
+	snprintf(resultPath, 64, "Resultados/command%d_output.txt", commandN);
+
     FILE *fpout = fopen(resultPath,"w");
     if (!fpout) {
 		perror("Unable to open/create output file");
