@@ -26,7 +26,7 @@ SRCS_ALL := $(shell ls $(SRC_DIR) | grep '.c')
 
 # needs updated bash??
 # gets files common between tests and src to avoid conflicts
-REPETITIONS = $(shell ./Scripts/get_file_repetitions.sh $(SRC_DIR) $(TEST_SRC_DIR))
+REPETITIONS := $(shell ./Scripts/get_file_repetitions.sh $(SRC_DIR) $(TEST_SRC_DIR))
 OBJ_WITHOUT_REPETITIONS := $(subst .c,.o,$(filter-out $(REPETITIONS), $(SRCS_ALL)))
 
 SRCS_DEBUG := $(SRCS_ALL)
@@ -49,7 +49,6 @@ OBJS_DEBUG_TEST := $(subst .c,.o,$(SRCS_TEST_DEBUG))
 OBJS_DEBUG_TEST := $(OBJS_DEBUG_TEST:%=$(TEST_DEBUG_BUILD_DIR)/%) $(OBJ_WITHOUT_REPETITIONS:%=$(DEBUG_BUILD_DIR)/%)
 
 # $(info $$OBJS_TEST is [${OBJS_TEST}])
-# $(info $$OBJ_WITHOUT_REPETITIONS is [${OBJ_WITHOUT_REPETITIONS}])
 
 # make .d
 DEPS := $(OBJS_ALL:.o=.d) $(OBJS_DEBUG:.o=.d) $(OBJS_TEST:.o=.d)

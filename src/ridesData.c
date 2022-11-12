@@ -26,11 +26,14 @@ DATA getRidesData(FILE *ptr) {
 	const gchar ** cities = (const gchar **)g_hash_table_get_keys_as_array(cityTable, &len);
 	GThread *threads[len];
 	gpointer args[len];
+
 	for (i = 0; i < (const int)len; i++) {
 		args[i] = g_hash_table_lookup(cityTable, cities[i]);
 		threads[i] = g_thread_new(NULL, sortCity, &args[i]);
+		// sortCity(&args[i]);
 	}
-	for (i = 0; i < (const int)len; i++) g_thread_join(threads[i]); 
+	for (i = 0; i < (const int)len; i++) g_thread_join(threads[i]);
+	free(cities);
 
 	// GArray *braga = g_hash_table_lookup(cityTable, "Braga");
 	// RidesStruct *idk;
@@ -38,7 +41,6 @@ DATA getRidesData(FILE *ptr) {
 	// 	idk = g_array_index(braga, RidesStruct *, i);
 	// 	printf("%s\n", idk->date);
 	// }
-	free(cities);
 
 	return data;
 }
