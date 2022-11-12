@@ -29,6 +29,10 @@ SRCS_ALL := $(shell ls $(SRC_DIR) | grep '.c')
 REPETITIONS := $(shell ./Scripts/get_file_repetitions.sh $(SRC_DIR) $(TEST_SRC_DIR))
 OBJ_WITHOUT_REPETITIONS := $(subst .c,.o,$(filter-out $(REPETITIONS), $(SRCS_ALL)))
 
+# nao é preciso?????? se dermos include aos .h de teste primeiro
+# INC_REPETITIONS := $(shell ./Scripts/get_file_repetitions.sh $(INC_DIR) $(TEST_INC_DIR))
+# INC_WITHOUT_REPETITIONS := $(subst .c,.o,$(filter-out $(INC_REPETITIONS), $(SRCS_ALL)))
+
 SRCS_DEBUG := $(SRCS_ALL)
 
 # é as src de teste + as src normains sem o main
@@ -36,6 +40,7 @@ SRCS_TEST := $(shell ls $(TEST_SRC_DIR) | grep '.c')
 
 SRCS_TEST_DEBUG := $(SRCS_TEST)
 
+# tou a repetir subst muitas vezes mas foi a maneira mais simples de ler que arranjei
 OBJS_ALL := $(subst .c,.o,$(SRCS_ALL))
 OBJS_ALL := $(OBJS_ALL:%=$(BUILD_DIR)/%)
 
@@ -89,7 +94,7 @@ $(TEST_EXEC): $(OBJS_TEST)
 
 $(TEST_BUILD_DIR)/%.o: $(TEST_SRC_DIR)/%.c
 	mkdir -p $(dir $@) $(RES_DIR)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -I$(TEST_INC_DIR) -c $< -o $@
+	$(CC) -I$(TEST_INC_DIR) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 .PHONY: testes_debug
 testes_debug: $(TEST_DEBUG_EXEC) debug
@@ -99,7 +104,7 @@ $(TEST_DEBUG_EXEC): $(OBJS_DEBUG_TEST)
 
 $(TEST_DEBUG_BUILD_DIR)/%.o: $(TEST_SRC_DIR)/%.c
 	mkdir -p $(dir $@) $(RES_DIR)
-	$(CC) $(CPPFLAGS) $(DEBUG_FLAGS) -I$(TEST_INC_DIR) -c $< -o $@
+	$(CC) -I$(TEST_INC_DIR) $(CPPFLAGS) $(DEBUG_FLAGS) -c $< -o $@
 
 .PHONY: clean
 RM_DIRS := $(BASE_BUILD_DIR) $(TARGET_EXEC) $(DEBUG_EXEC) $(TEST_EXEC) $(TEST_DEBUG_EXEC) $(RES_DIR)

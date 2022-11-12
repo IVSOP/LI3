@@ -31,9 +31,8 @@
 *.out
 *.app
 
-programa-principal
+programa-*
 exemplos_de_queries
-src/obj
 Dataset_Fase1
 teste.txt
 Resultados
@@ -43,4 +42,3 @@ __MACOSX
 *.zip
 debug
 build
-programa-testes
