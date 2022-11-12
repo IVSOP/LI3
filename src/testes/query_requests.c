@@ -15,6 +15,7 @@ char * query_not_implemented(char *trash0, char *trash1, char *trash2, UserData 
 	return NULL;
 }
 
+
 void sub_timespec(struct timespec t1, struct timespec t2, struct timespec *td)
 {
     td->tv_nsec = t2.tv_nsec - t1.tv_nsec;
