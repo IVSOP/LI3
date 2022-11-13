@@ -25,7 +25,7 @@ DATA getUserData(FILE *ptr) {
 		// username, userstruct->name, userstruct->gender, userstruct->birthdate, userstruct->accountCreation, userstruct->payMethod, userstruct->status);
 
 		// if (username == NULL) ???
-		if (g_hash_table_insert(table, username, userstruct) == FALSE) fprintf(stderr, "Username already existed\n");
+		if (g_hash_table_insert(table, username, userstruct) == FALSE) { fprintf(stderr, "Username already existed\n"); exit(5); }
 	}
 
 	return table;

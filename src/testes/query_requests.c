@@ -15,7 +15,6 @@ char * query_not_implemented(char *trash0, char *trash1, char *trash2, UserData 
 	return NULL;
 }
 
-
 void sub_timespec(struct timespec t1, struct timespec t2, struct timespec *td)
 {
     td->tv_nsec = t2.tv_nsec - t1.tv_nsec;
@@ -39,6 +38,7 @@ int compareResult(char *resultStr, char *resultPath) {
 	for (i = 0; resultStr[i] != '\0' && (chr = fgetc(fpout)) != EOF; i++) {
 		if ((char)chr != resultStr[i]) {
 			// fprintf(stderr, "Error on character [%d]", i);
+			fclose(fpout);
 			return 3;
 		}
 	}
