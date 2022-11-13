@@ -28,9 +28,6 @@ int writeResults (int commandN, char * strResult) {
 }
 
 int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
-	clock_t start, end;
-	double cpu_time_used;
-
 	query_func * queryList[9] = {query_1, query_2, NULL, query_4, NULL, NULL, NULL, NULL, NULL};
     char * strBuffer = malloc(sizeof(char)*LINE_SIZE); // buffer de cada linha lida
     char * querryResult = NULL; // pointer para a string resultante de cada querry
@@ -41,7 +38,6 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
     
     // lê linhas individualmente até chegar ao fim do ficheiro
 	for (i=0; (read = getline(&strBuffer, &len, fp) != -1); i++, commandN++) {
-		start = clock();
 
         strBuffer[strcspn(strBuffer, "\n")] = 0; // para remover o newline
 
@@ -61,9 +57,6 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
 		free (querryResult); // free do buffer de output
 		len = LINE_SIZE; // após um getline, len é alterado para o tamanho da linha; tem de ser reset, a próxima linha pode ter len maior
 
-		end = clock();
-		cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("Time to answer querry %d: %g\n", (int)((*tempsegstr[0]) - 48), cpu_time_used);
     }
     free (strBuffer); // free do buffer de input
     return 0;

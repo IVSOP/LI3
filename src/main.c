@@ -8,10 +8,6 @@
 #include "files.h"
 
 int main (int argc, char **argv) {
-	clock_t start, end;
-	double cpu_time_used;
-	start = clock();
-
     // se não for dado o ficheiro e as querries no terminal - fase 2
     if (argc < 2) {
         fprintf(stderr, "Modo interativo por implementar!\n");
@@ -33,10 +29,6 @@ int main (int argc, char **argv) {
         return 2;
     }
 
-	end = clock();
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("1:%g\n", cpu_time_used);
-
 	fclose(files[0]);
 	fclose(files[1]);
 	fclose(files[2]);
@@ -46,9 +38,6 @@ int main (int argc, char **argv) {
 	freeDriverData(drivers);
 	freeRidesData(rides);
 	free(files);
-	
-	end = clock();
-	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-	printf("2:%g\n", cpu_time_used);
+
 	return 0;
 }
