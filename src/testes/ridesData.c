@@ -6,7 +6,7 @@
 void *sortCity(void *data) {
 	GArray *array = *(GArray **)data;
 	g_array_sort(array, compareRidesByDate);
-	g_thread_exit(NULL);
+	// if(MULTITHREADED_SORT) g_thread_exit(NULL);
 	return NULL;
 }
 
