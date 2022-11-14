@@ -25,7 +25,8 @@ driverRatingInfo * newDriverRating (char * rideDate, short int driverNumber, sho
 
 //TODO: free dos elementos do g_ptr_array
 char * query_2 (char * number, char * trash1, char * trash2, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
-    unsigned int i, driverStatus;
+    unsigned int driverStatus;
+	int i;
     gint driverNumber;
     gint elemNumber = (gint) DRIVER_ARR_SIZE * SIZE; // numero de elem do array
     driverRatingInfo * newStruct = NULL,// pointer para struct que vai ser guardada em cada pos do array
