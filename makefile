@@ -19,7 +19,7 @@ CC := gcc
 GLIBFLAGS := $(shell pkg-config --cflags --libs gobject-2.0)
 STD_FLAGS := -I$(INC_DIR) $(GLIBFLAGS) -Wall -Wextra -pedantic -Wno-unused-parameter #-lm -pthread
 CFLAGS := -O2 $(STD_FLAGS)
-DEBUG_FLAGS := -O0 -g -ggdb3 $(STD_FLAGS)
+DEBUG_FLAGS := -O0 -g3 $(STD_FLAGS) #-ggdb3
 
 # get .c files, remove original path and turn into .o
 SRCS_ALL := $(shell ls $(SRC_DIR) | grep '.c')
