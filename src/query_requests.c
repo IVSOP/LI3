@@ -10,7 +10,7 @@
 #define LINE_SIZE 128
 
 int writeResults (int commandN, char * strResult) {
-    int ret;
+    int ret1, ret2;
     char resultPath[64];
 	snprintf(resultPath, 64, "Resultados/command%d_output.txt", commandN);
 
@@ -19,11 +19,15 @@ int writeResults (int commandN, char * strResult) {
 		perror("Unable to open/create output file");
         return 1;
     }
-    ret = fputs(strResult, fpout);
-    if (ret == EOF) {
+    ret1 = fputs(strResult, fpout);
+    if (ret1 == EOF) {
+		fclose(fpout);
         return 2;
-    }
-	fclose(fpout);
+    } else {
+		ret2 = fputc((int)'\n', fpout);
+		fclose(fpout);
+		if (ret2 == EOF) return 2;
+	}
     return 0;
 }
 
