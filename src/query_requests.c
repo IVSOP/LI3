@@ -19,7 +19,7 @@ int writeResults (int commandN, char * strResult) {
 		perror("Unable to open/create output file");
         return 1;
     }
-    ret1 = fputs(strResult, fpout);
+    if (strResult) ret1 = fputs(strResult, fpout);
     if (ret1 == EOF) {
 		fclose(fpout);
         return 2;
@@ -31,8 +31,12 @@ int writeResults (int commandN, char * strResult) {
     return 0;
 }
 
+char * NOP(char *city, char *trash1, char *trash2, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
+	return NULL;
+}
+
 int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
-	query_func * queryList[9] = {query_1, query_2, NULL, query_4, NULL, NULL, NULL, NULL, NULL};
+	query_func * queryList[9] = {query_1, query_2, NOP, query_4, NOP, NOP, NOP, NOP, NOP};
     char * strBuffer = malloc(sizeof(char)*LINE_SIZE); // buffer de cada linha lida
     char * querryResult = NULL; // pointer para a string resultante de cada querry
     char * tempsegstr[4]; // array para atribuir o segmento correto do input
