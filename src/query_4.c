@@ -6,13 +6,13 @@ char * query_4(char *city, char *trash1, char *trash2, UserData *userData, Drive
 	guint i;
 	unsigned int distance[3] = {0, 0, 0}, //basic, green, premium
 	numRides[3] = {0, 0, 0};
-	GArray *array = getRidesByCity(ridesData, city);
+	GPtrArray *array = getRidesByCity(ridesData, city);
 	RidesStruct *currentRide;
 	DriverStruct *currentDriver;
 	guint len = array->len;
 
 	for (i = 0; i < len; i++) {
-		currentRide = g_array_index(array, RidesStruct *, i);
+		currentRide = g_ptr_array_index(array, i);
 		currentDriver = getDriverByID(driverData, currentRide->driver);
 
 		// 		  -97 /6

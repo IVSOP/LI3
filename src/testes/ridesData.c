@@ -4,9 +4,9 @@
 #define MULTITHREADED_SORT 1
 
 void *sortCity(void *data) {
-	GArray *array = *(GArray **)data;
-	g_array_sort(array, compareRidesByDate);
-	// if(MULTITHREADED_SORT) g_thread_exit(NULL);
+	GPtrArray *array = *(GPtrArray **)data;
+	g_ptr_array_sort(array, compareRidesByDate);
+	g_thread_exit(NULL);
 	return NULL;
 }
 
@@ -37,16 +37,15 @@ DATA getRidesData(FILE *ptr) {
 		for (i = 0; i < (const int)len; i++) g_thread_join(threads[i]);
 	} else {
 		for (i = 0; i < (const int)len; i++) {
-			g_array_sort((GArray *)g_hash_table_lookup(cityTable, cities[i]), compareRidesByDate);
+			g_ptr_array_sort((GPtrArray *)g_hash_table_lookup(cityTable, cities[i]), compareRidesByDate);
 		}
 	}
 	free(cities);
 
-
-	// GArray *braga = g_hash_table_lookup(cityTable, "Braga");
+	// GPtrArray *braga = g_hash_table_lookup(cityTable, "Braga");
 	// RidesStruct *idk;
 	// for (i = 0; i < 15; i++) {
-	// 	idk = g_array_index(braga, RidesStruct *, i);
+	// 	idk = g_ptr_array_index(braga, i);
 	// 	printf("%s\n", idk->date);
 	// }
 
@@ -56,7 +55,7 @@ DATA getRidesData(FILE *ptr) {
 RidesStruct * getRides(FILE *ptr, GHashTable *cityTable) {
 	int i, count, chr;
 	char tempBuffer[16], *city;
-	GArray *array;
+	GPtrArray *array;
 	RidesStruct *ridesStructArray = malloc(SIZE*sizeof(RidesStruct)), *temp;
 	for (i = count = 0; i < SIZE; i++, count++) {
 		while ((chr = fgetc(ptr)) != ';');// && chr != -1); // skip id
@@ -80,12 +79,12 @@ RidesStruct * getRides(FILE *ptr, GHashTable *cityTable) {
 		// check if city is not already in hash table
 		if ((array = g_hash_table_lookup(cityTable, city)) == NULL) {
 			// if not, insert
-			array = g_array_sized_new(FALSE, FALSE, sizeof(RidesStruct *), (1 << 17) + (1 << 15)); // usar ints em vez das struct * ???
-			g_array_append_val(array, temp);
+			array = g_ptr_array_sized_new((1 << 17) + (1 << 15));
+			g_ptr_array_add(array, temp);
 			g_hash_table_insert(cityTable, city, array);
 		} else {
 			// if yes, append to all the other data
-			g_array_append_val(array, temp);
+			g_ptr_array_add(array, temp);
 			// printf("Adding to %s a ride in %s\n", city, temp->city);
 		}
 
@@ -139,8 +138,8 @@ RidesStruct * getRideByID(DATA data, int ID) {
 }
 
 void freeArray(void *data) {
-	GArray *array = (GArray *)data;
-	g_array_free(array, TRUE);
+	GPtrArray *array = (GPtrArray *)data;
+	g_ptr_array_free(array, TRUE);
 }
 
 gint compareRidesByDate (gconstpointer a, gconstpointer b) {
