@@ -7,7 +7,7 @@
 #include "commonParsing.h"
 
 typedef struct {
-    unsigned int  * ratingChart;
+    void  * ratingChart; // void * porque vai guardar um array de ratings de 1 a 5, e mais tarde é convertido para um valor médio desses ratings
     char * mostRecRideDate;
     short int driverNumber; // talvez meter em int o valor, ocupa menos espaço com char?
 } driverRatingInfo;
