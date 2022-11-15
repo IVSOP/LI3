@@ -31,17 +31,21 @@ void sub_timespec(struct timespec t1, struct timespec t2, struct timespec *td)
     }
 }
 
+// nao contamos o ultimo \n
 int compareResult(char *resultStr, char *resultPath) {
 	int i;
-	int chr;
+	int chr = EOF;
 	FILE *fpout = fopen(resultPath, "r");
 	for (i = 0; resultStr[i] != '\0' && (chr = fgetc(fpout)) != EOF; i++) {
+		// printf("|%d %d %c %c\n", chr, (int) resultStr[i], (char)chr, resultStr[i]);
 		if ((char)chr != resultStr[i]) {
 			// fprintf(stderr, "Error on character [%d]", i);
 			fclose(fpout);
 			return 3;
 		}
 	}
+	// isto funcemina sempre???
+	if (resultStr[i] == '\0' && (char)fgetc(fpout) != '\n') { fclose(fpout); return 3; }
 	fclose(fpout);
 	return 0;
 }
