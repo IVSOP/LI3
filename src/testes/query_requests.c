@@ -10,6 +10,8 @@
 
 #define LINE_SIZE 128
 
+#define TEST_PATH "exemplos_de_queries/tests_custom/command%d_output.txt"
+
 char * query_not_implemented(char *trash0, char *trash1, char *trash2, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
 	fprintf(stderr, "ERROR: querry not implemented\n");
 	return NULL;
@@ -36,24 +38,32 @@ int compareResult(char *resultStr, char *resultPath) {
 	int i;
 	int chr = EOF;
 	FILE *fpout = fopen(resultPath, "r");
-	for (i = 0; resultStr[i] != '\0' && (chr = fgetc(fpout)) != EOF; i++) {
-		// printf("|%d %d %c %c\n", chr, (int) resultStr[i], (char)chr, resultStr[i]);
-		if ((char)chr != resultStr[i]) {
-			// fprintf(stderr, "Error on character [%d]", i);
-			fclose(fpout);
-			return 3;
+	if (resultStr == NULL) {
+		chr = fgetc(fpout);
+		fclose(fpout);
+		if (chr == EOF) return 0;
+		else return 3;
+	} else {
+		rewind(fpout);
+		if (resultStr == NULL) { printf("ALO"); fflush(stdout); }
+		for (i = 0; resultStr[i] != '\0' && (chr = fgetc(fpout)) != EOF; i++) {
+			// printf("|%d %d %c %c\n", chr, (int) resultStr[i], (char)chr, resultStr[i]);
+			if ((char)chr != resultStr[i]) {
+				// fprintf(stderr, "Error on character [%d]", i);
+				fclose(fpout);
+				return 3;
+			}
 		}
+		// isto funcemina sempre???
+		if (resultStr[i] == '\0' && (char)fgetc(fpout) != '\n') { fclose(fpout); return 3; }
+		fclose(fpout);
 	}
-	// isto funcemina sempre???
-	if (resultStr[i] == '\0' && (char)fgetc(fpout) != '\n') { fclose(fpout); return 3; }
-	fclose(fpout);
 	return 0;
 }
-
 int writeResults (int commandN, char * strResult) {
 	char resultPath[64];
-	snprintf(resultPath, 64, "exemplos_de_queries/tests_1/command%d_output.txt", commandN);
-    
+	snprintf(resultPath, 64, TEST_PATH, commandN);
+	
 	return compareResult(strResult, resultPath);
 }
 
@@ -95,19 +105,20 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
 		sub_timespec(start, finish, &delta);
 		cpu_time_used = ((double) (cpu_end - cpu_start)) / CLOCKS_PER_SEC;
 		
-		if (querryResult != NULL) {
-			writeRet = writeResults(commandN, querryResult);
-			if (writeRet == 1) {
-				fprintf(stderr, "error writing file");
-				return 3;
-			}
-			
-			if (writeRet == 3) {
-				fprintf(stderr, "-->ERROR: Results differ\nCommand:%s\nExpected:%s\nGot:%s\nError file:exemplos_de_queries/tests_1/command%d_output.txt\n", full_command, "see file :)", querryResult, commandN);
-			} else {
-				printf("Correct answer\n");
-			}
+		// test output
+		writeRet = writeResults(commandN, querryResult);
+		if (querryResult == NULL) printf("WARN: querry yielded no result, still comparing\n");
+		if (writeRet == 1) {
+			fprintf(stderr, "error writing file");
+			return 3;
 		}
+		
+		if (writeRet == 3) {
+			fprintf(stderr, "-->ERROR: Results differ\nCommand:%s\nExpected:%s\nGot:%s\nError file:exemplos_de_queries/tests_1/command%d_output.txt\n", full_command, "see file :)", querryResult, commandN);
+		} else {
+			printf("Correct answer\n");
+		}
+		
 		printf("CPU time:%g\n", cpu_time_used);
 		printf("Wall clock time:%d.%.9ld\n\n", (int)delta.tv_sec, delta.tv_nsec);
 
