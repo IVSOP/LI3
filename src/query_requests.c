@@ -8,26 +8,23 @@
 #include "ridesData.h"
 
 #define LINE_SIZE 128
-
+#define TEST_PATH "Resultados/command%d_output.txt"
 int writeResults (int commandN, char * strResult) {
-    int ret1 = EOF, ret2;
+    int ret1 = EOF;
     char resultPath[64];
-	snprintf(resultPath, 64, "Resultados/command%d_output.txt", commandN);
+	snprintf(resultPath, 64, TEST_PATH, commandN);
 
     FILE *fpout = fopen(resultPath,"w");
     if (!fpout) {
 		perror("Unable to open/create output file");
         return 1;
     }
-    if (strResult) ret1 = fputs(strResult, fpout); else { fclose(fpout); return 0; } // para nao dar erro se a string for vazia
-    if (ret1 == EOF) {
+    if (strResult) ret1 = fputs(strResult, fpout); // para nao dar erro se a string for vazia
+    fclose(fpout); 
+    if (ret1 == EOF) { // caso ficheiro não abra
 		fclose(fpout);
         return 2;
-    } else {
-		ret2 = fputc((int)'\n', fpout);
-		fclose(fpout);
-		if (ret2 == EOF) return 2;
-	}
+    }
     return 0;
 }
 
@@ -60,7 +57,7 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
 		writeRet = writeResults(commandN, querryResult);
         if (writeRet) {
             fprintf(stderr, "error writing file");
-            return 3;
+            return 1;
         }
 		free (querryResult); // free do buffer de output
 		len = LINE_SIZE; // após um getline, len é alterado para o tamanho da linha; tem de ser reset, a próxima linha pode ter len maior

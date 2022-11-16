@@ -9,8 +9,8 @@
 #include <unistd.h>
 
 #define LINE_SIZE 128
-
-#define TEST_PATH "exemplos_de_queries/tests_custom/command%d_output.txt"
+#define PATH_SIZE 64
+#define TEST_PATH "exemplos_de_queries/tests_1/command%d_output.txt"
 
 char * query_not_implemented(char *trash0, char *trash1, char *trash2, UserData *userData, DriverStruct *driverData[], RidesData *ridesData) {
 	fprintf(stderr, "ERROR: querry not implemented\n");
@@ -37,32 +37,33 @@ void sub_timespec(struct timespec t1, struct timespec t2, struct timespec *td)
 int compareResult(char *resultStr, char *resultPath) {
 	int i;
 	int chr = EOF;
+	int ret = 0; // se retornar isto, deu valores e devia dar valores
 	FILE *fpout = fopen(resultPath, "r");
+	if (!fpout) {
+		perror("Unable to open/create output file");
+    	return -1;
+	}
 	if (resultStr == NULL) {
 		chr = fgetc(fpout);
-		fclose(fpout);
-		if (chr == EOF) return 0;
-		else return 3;
+		if (chr == EOF) ret = 1; // deu NULL e devia dar NULL (ou não conseguiu ler o ficheiro -> fgetc tem o mesmo return)
+		else ret = 2; // deu NULL, e devia dar valores;
 	} else {
-		rewind(fpout);
-		if (resultStr == NULL) { printf("ALO"); fflush(stdout); }
-		for (i = 0; resultStr[i] != '\0' && (chr = fgetc(fpout)) != EOF; i++) {
+		fseek(fpout,-1,SEEK_CUR); // retrocede um caractér (movido pelo fgetc) // melhor que rewind ou pior??
+		for (i = 0; resultStr[i] != '\0' && (chr = fgetc(fpout)) != EOF && (!ret); i++) { // fgetc individual é melhor que getline ??
 			// printf("|%d %d %c %c\n", chr, (int) resultStr[i], (char)chr, resultStr[i]);
 			if ((char)chr != resultStr[i]) {
-				// fprintf(stderr, "Error on character [%d]", i);
-				fclose(fpout);
-				return 3;
+				fprintf(stderr, "Error on character [%d]", i);
+				ret = 3; // deu valores diferentes dos supostos
 			}
 		}
-		// isto funcemina sempre???
-		if (resultStr[i] == '\0' && (char)fgetc(fpout) != '\n') { fclose(fpout); return 3; }
-		fclose(fpout);
 	}
-	return 0;
+	fclose(fpout);
+	return ret;
 }
+
 int writeResults (int commandN, char * strResult) {
-	char resultPath[64];
-	snprintf(resultPath, 64, TEST_PATH, commandN);
+	char resultPath[PATH_SIZE];
+	snprintf(resultPath, PATH_SIZE, TEST_PATH, commandN);
 	
 	return compareResult(strResult, resultPath);
 }
@@ -90,7 +91,6 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
 
 		strncpy(full_command, strBuffer, LINE_SIZE - 1);
 
-        // mais rápido assim ou fazer só sscanf com vários ifs para cada query??
 		temp = strBuffer;
         for (j = 0; j < 4 && (strHolder = strsep(&strBuffer," ")); j++) { // j<4 por segurança
             tempsegstr[j] = strHolder;
@@ -107,13 +107,13 @@ int queryRequests (FILE * fp, UserData *userData, DriverStruct *driverData[], Ri
 		
 		// test output
 		writeRet = writeResults(commandN, querryResult);
-		if (querryResult == NULL) printf("WARN: querry yielded no result, still comparing\n");
 		if (writeRet == 1) {
-			fprintf(stderr, "error writing file");
+			printf("Correct answer (querry yielded no result) || OR || Error reading file:exemplos_de_queries/tests_1/command%d_output.txt\n",commandN);
 			return 3;
 		}
 		
-		if (writeRet == 3) {
+		//return 2 : deu NULL e devia dar valores; return 3: deu valores diferentes
+		if (writeRet == 2 || writeRet == 3) {
 			fprintf(stderr, "-->ERROR: Results differ\nCommand:%s\nExpected:%s\nGot:%s\nError file:exemplos_de_queries/tests_1/command%d_output.txt\n", full_command, "see file :)", querryResult, commandN);
 		} else {
 			printf("Correct answer\n");
