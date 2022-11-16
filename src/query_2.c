@@ -9,7 +9,7 @@
 //NOTA funções utlizadas por várias funções devem devolver, por exemplo strings, que são cópias, para caso sejam usadas noutras funções não alterarem essas strings
 
 void freeRidesRating (void * drivesRating) {
-    driverRatingInfo * currentArrayStruct = (driverRatingInfo *) drivesRating
+    driverRatingInfo * currentArrayStruct = (driverRatingInfo *) drivesRating;
     free(currentArrayStruct->ratingChart);
     free(currentArrayStruct->mostRecRideDate);
 }
